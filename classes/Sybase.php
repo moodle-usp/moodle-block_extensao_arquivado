@@ -25,7 +25,7 @@ class Sybase
                 self::$instance = new PDO($dsn,$user,$pass);
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
             } catch (\Throwable $t) {
-                #print_r($t->getMessage());
+                print_r($t->getMessage());
                 echo "Erro na conexão com o database do replicado! Contate o suporte";
                 die();
             }
@@ -97,7 +97,7 @@ class Sybase
      * o $codpes é ministrante.
      */
     public static function oferecimentos($codpes){
-        $year = '2020';
+        $year = date(Y);
         $query = "
             SELECT 
             DISTINCT t1.codofeatvceu,
@@ -135,7 +135,7 @@ class Sybase
      * o $codpes é ministrante.
      */
     public static function curso($codofeatvceu){
-        $year = '2020';
+        $year = date(Y);
         $query = "
             SELECT 
             DISTINCT t1.codofeatvceu,

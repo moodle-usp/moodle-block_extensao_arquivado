@@ -1,10 +1,8 @@
 <?php
 
 require_once('classes/Sybase.php');
-require_once('classes/Helper.php');
 
 use block_extensao\Sybase;
-use block_extensao\Helper;
 
 class block_extensao extends block_base {
     public function init() {
@@ -14,11 +12,13 @@ class block_extensao extends block_base {
     public function get_content() {
         global $USER;
         
-        $this->content =  new stdClass;
+        $this->content->text = 
+		"Acesse a área de administração";
 
-        $this->content->text = '';
+		$url = new moodle_url('/blocks/extensao/view.php');
+		$this->content->text .= html_writer::link($url, 'Upload stuffs');
 
-        return $this->content;
+		return $this->content;
     }
 
 }
