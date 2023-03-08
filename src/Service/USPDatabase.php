@@ -4,7 +4,7 @@ namespace block_extensao\Service;
 
 use PDO;
 
-class Sybase
+class USPDatabase
 {
     private static $instance;
     /**
@@ -13,11 +13,14 @@ class Sybase
     public static function getInstance(){
         global $CFG;
 
-        $host = ....;
-        $port = ....;
-        $db   = ...;
-        $user = ...;
-        $pass = ...;
+        $host = get_config('block_extensao','host');
+        
+        //var_dump($host); die();
+
+        $port = get_config('block_extensao','port');
+        $db   = get_config('block_extensao','database');
+        $user = get_config('block_extensao','user');
+        $pass = get_config('block_extensao','password');
 
         if (!self::$instance) {
             try {

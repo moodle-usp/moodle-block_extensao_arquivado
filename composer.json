@@ -1,0 +1,14 @@
+{
+    "name": "moodle/extensao",
+    "description": "Extensão USP",
+    "type": "moodle-plugin",
+    "authors": [
+        {
+            "name": "Thiago Gomes Verissimo",
+            "email": "verissimotgv@gmail.com"
+        }
+    ],
+    "require": {
+        "nesbot/carbon": "^2.64"
+    }
+}
