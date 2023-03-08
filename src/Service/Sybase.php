@@ -1,6 +1,6 @@
 <?php
 
-namespace block_extensao;
+namespace block_extensao\Service;
 
 use PDO;
 
@@ -13,12 +13,12 @@ class Sybase
     public static function getInstance(){
         global $CFG;
 
-        $host = $CFG->sybase_host;
-        $port = $CFG->sybase_port;
-        $db   = $CFG->sybase_dbname;
-        $user = $CFG->sybase_user;
-        $pass = $CFG->sybase_password;
-        
+        $host = ....;
+        $port = ....;
+        $db   = ...;
+        $user = ...;
+        $pass = ...;
+
         if (!self::$instance) {
             try {
                 $dsn = "dblib:host={$host}:{$port};dbname={$db};charset=UTF-8";
@@ -90,82 +90,6 @@ class Sybase
             $result = self::utf8_converter($result);
         }
         return $result;
-    }
-
-    /**
-     * Método que devolve um array com os cursos em que
-     * o $codpes é ministrante.
-     */
-    public static function oferecimentos($codpes){
-        $year = '2020';
-        $query = "
-            SELECT 
-            DISTINCT t1.codofeatvceu,
-            t1.dtainiofeatv,
-            t1.dtafimofeatv,
-            t2.nomcurceu,
-            t3.codpes,
-            t3.codatc,
-            t4.sglund
-        
-            FROM OFERECIMENTOATIVIDADECEU t1
-            
-            INNER JOIN CURSOCEU t2
-            ON t1.codcurceu = t2.codcurceu
-            
-            INNER JOIN MINISTRANTECEU t3
-            ON t1.codofeatvceu = t3.codofeatvceu
-            
-            INNER JOIN UNIDADE t4
-            ON t2.codund = t4.codund
-            
-            WHERE (t1.dtainiofeatv >= '{$year}-01-01' AND t1.dtainiofeatv <= '{$year}-12-31')
-            AND codpes = convert(int,:codpes)
-        ";
-        
-        $param = [
-            'codpes' => $codpes,
-        ];
-
-        return self::fetchAll($query,$param);
-    }
-
-    /**
-     * Método que devolve um array com os cursos em que
-     * o $codpes é ministrante.
-     */
-    public static function curso($codofeatvceu){
-        $year = '2020';
-        $query = "
-            SELECT 
-            DISTINCT t1.codofeatvceu,
-            t1.dtainiofeatv,
-            t1.dtafimofeatv,
-            t2.nomcurceu,
-            t3.codpes,
-            t3.codatc,
-            t4.sglund
-        
-            FROM OFERECIMENTOATIVIDADECEU t1
-            
-            INNER JOIN CURSOCEU t2
-            ON t1.codcurceu = t2.codcurceu
-            
-            INNER JOIN MINISTRANTECEU t3
-            ON t1.codofeatvceu = t3.codofeatvceu
-            
-            INNER JOIN UNIDADE t4
-            ON t2.codund = t4.codund
-            
-            WHERE t1.codofeatvceu = convert(int,:codofeatvceu)
-        ";
-        
-        $param = [
-            'codofeatvceu' => $codofeatvceu,
-        ];
-
-        return self::fetch($query,$param);
-        
     }
 
 }
