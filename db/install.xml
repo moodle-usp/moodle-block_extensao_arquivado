@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/extensao/db" VERSION="20230208" COMMENT="XMLDB file for Moodle blocks/extensao"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="block_extensao" COMMENT="Default comment for block_extensao, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="extensao_turma" COMMENT="Para armazenar informaco
+    es de turma e curso.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_turma_apolo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id da turma no Apolo."/>
+        <FIELD NAME="id_curso_apolo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id do curso no Apolo."/>
+        <FIELD NAME="nome_curso_apolo" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do curso no Apolo."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="extensao_usuario" COMMENT="Para armazenar a conexão entre um usuario no Apolo e o mesmo usuário no Moodle.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_moodle" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Id do usuario no Moodle."/>
+        <FIELD NAME="id_apolo" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Id do usuario no Apolo."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_id_moodle" TYPE="foreign" FIELDS="id_moodle" REFTABLE="mdl_user" REFFIELDS="id" COMMENT="Chave estrangeira para o id_moodle"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="extensao_usuario_curso" COMMENT="Para relacionar os usuarios com os cursos.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="nusp_usuario" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Numero USP do usuario."/>
+        <FIELD NAME="id_turma_apolo" TYPE="INT" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id da turma no Apolo."/>
+        <FIELD NAME="papel_usuario" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Papel do usuario (i.e., se eh aluno, docente, monitor, etc)."/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
