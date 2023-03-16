@@ -14,21 +14,22 @@ class USPDatabase
         global $CFG;
 
         $host = get_config('block_extensao','host');
-        
-        //var_dump($host); die();
-
         $port = get_config('block_extensao','port');
         $db   = get_config('block_extensao','database');
         $user = get_config('block_extensao','user');
         $pass = get_config('block_extensao','password');
 
+        if (empty($host) or empty($port) or empty($db) or empty($user) or empty($pass)) {
+            echo "As credenciais de conexão estão vazias.";
+            return false;
+        } 
         if (!self::$instance) {
             try {
                 $dsn = "dblib:host={$host}:{$port};dbname={$db};charset=UTF-8";
                 self::$instance = new PDO($dsn,$user,$pass);
                 self::$instance->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
             } catch (\Throwable $t) {
-                #print_r($t->getMessage());
+                // print_r($t->getMessage()) . '<br>';
                 echo "Erro na conexão com o database do replicado! Contate o suporte";
                 die();
             }
@@ -83,7 +84,7 @@ class USPDatabase
             }
             $stmt->execute();
         } catch (\Throwable $t) {
-            #print_r($t->getMessage());
+            // print_r($t->getMessage());
             echo "Erro Interno no replicado: contate o suporte!";
             return false;
         }
