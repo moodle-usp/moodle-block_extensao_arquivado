@@ -35,7 +35,7 @@
         <KEY NAME="fk_id_moodle" TYPE="foreign" FIELDS="id_moodle" REFTABLE="mdl_user" REFFIELDS="id" COMMENT="Chave estrangeira para o id_moodle"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="extensao_usuario_curso" COMMENT="Para relacionar os usuarios com os cursos.">
+    <TABLE NAME="extensao_usuario_turma" COMMENT="Para relacionar os usuarios com os cursos.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="nusp_usuario" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Numero USP do usuario."/>
