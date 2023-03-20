@@ -1,3 +1,20 @@
 <p>Sincronizar os cursos com o Apolo</p>
 
 <a class="btn btn-primary" href="{{ urlPaginaSincronizar }}">Sincronizar</a>
+
+<hr>
+
+<h4>Seus cursos</h4>
+
+{{#sem_cursos}}
+  <p>Nenhum curso foi encontrado.</p>
+{{/sem_cursos}}
+
+{{#cursos_docente}}
+<div class="card">
+  <div class="card-body">
+    <h6 class="card-title">({{ id_curso_apolo }}-{{ id_turma_apolo }}) {{ nome_curso_apolo }}</h6>
+    <a href="{{ url_criacao }}" class="btn btn-primary btn-sm">Criar ambiente</a>
+  </div>  
+</div>
+{{/cursos_docente}}

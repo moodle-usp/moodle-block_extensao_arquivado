@@ -30,16 +30,15 @@ class Sincronizar {
      * 
      * A ideia eh que essa funcao retorne um array das turmas, trazendo as
      * informacoes relativas aos cursos.
-     * [ nome arbitrario so pra definir ]
      */
-    echo 'começando<br>';
+
     $turmas = Query::turmasAbertas();
     // monta o array que sera adicionado na mdl_extensao_turma
     $infos_turma = $this->filtrarInfosTurmas($turmas);
 
     // pega as turmas que nao estao na base
     $infos_turma = $this->turmasNaBase($infos_turma);
-
+    
     // se estiver vazio nao tem por que continuar
     if (empty($infos_turma)) {
       \core\notification::success('A base já estava sincronizada!');
@@ -89,6 +88,7 @@ class Sincronizar {
       $obj->id_turma_apolo = $turma['EdCurso']; // DUVIDA: eh essa info que queremos mesmo?
       $obj->id_curso_apolo = $turma['codCursoExtensao'];
       $obj->nome_curso_apolo = $turma['NomeCurso'];
+      $obj->curso_moodle_criado = 0;
       return $obj;
     }, $turmas);
   }
