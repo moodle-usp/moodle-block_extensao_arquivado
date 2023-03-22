@@ -8,7 +8,7 @@
  */
 
 // Configuracoes da pagina
-require_once('../../../config.php');
+require_once(dirname(__FILE__) . '/../../../config.php');
 global $PAGE, $OUTPUT;
 
 $PAGE->set_heading(get_string('pluginname', 'block_extensao'));

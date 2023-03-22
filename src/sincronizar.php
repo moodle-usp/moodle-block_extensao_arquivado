@@ -16,11 +16,18 @@
  * fazermos algo bem pensado.
  */
 
-require_once('../../../config.php');
+require_once(dirname(__FILE__) . '/../../../config.php');
 require_once('Service/Query.php');
 use block_extensao\Service\Query;
  
 class Sincronizar {
+
+  private $URL_RETORNO;
+
+  public function __construct() {
+    $this->URL_RETORNO = '/blocks/extensao/pages/sincronizar.php';   
+    $this->sincronizar();
+  }
 
   // Captura as turmas atuais no Apolo e registra na base Moodle
   public function sincronizar () {
@@ -31,7 +38,6 @@ class Sincronizar {
      * A ideia eh que essa funcao retorne um array das turmas, trazendo as
      * informacoes relativas aos cursos.
      */
-
     $turmas = Query::turmasAbertas();
     // monta o array que sera adicionado na mdl_extensao_turma
     $infos_turma = $this->filtrarInfosTurmas($turmas);
@@ -42,14 +48,14 @@ class Sincronizar {
     // se estiver vazio nao tem por que continuar
     if (empty($infos_turma)) {
       \core\notification::success('A base já estava sincronizada!');
-      $url = new moodle_url('/blocks/extensao/pages/sincronizar.php');
+      $url = new moodle_url($this->URL_RETORNO);
       redirect($url);
       // return false;
     }
 
     // salva na mdl_extensao_turma
     $this->salvarTurmasExtensao($infos_turma);
-
+    
     /**
      * Relacionar usuarios com turmas
      * 
@@ -77,7 +83,7 @@ class Sincronizar {
 
     // retorna a pagina de sincronizar
     \core\notification::success('Atualizado com sucesso!');
-    $url = new moodle_url('/blocks/extensao/pages/sincronizar.php');
+    $url = new moodle_url($this->URL_RETORNO);
     redirect($url);
   }
 

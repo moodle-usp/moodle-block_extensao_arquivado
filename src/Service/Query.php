@@ -47,7 +47,7 @@ class Query
         WHERE 
           O.dtafimofeatv > '$hoje'
           AND
-          M.codatc IN (1, 2, 5)
+          M.codatc = 1
     ";
     return USPDatabase::fetchAll($query);
   }

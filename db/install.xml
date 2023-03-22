@@ -19,6 +19,7 @@
         <FIELD NAME="id_turma_apolo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id da turma no Apolo."/>
         <FIELD NAME="id_curso_apolo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id do curso no Apolo."/>
         <FIELD NAME="nome_curso_apolo" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do curso no Apolo."/>
+        <FIELD NAME="curso_moodle_criado" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 se o curso ja tiver sido criado, 0 se nao"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
