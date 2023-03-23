@@ -1,36 +1,20 @@
 <?php
 
-/**
- * Sincronizar
- * 
- * A ideia desse arquivo eh fazer o servico de sincronizacao. Nao sei bem onde
- * deixa-lo, entao por hora vou deixar aqui. Ele vai chamar a classe de queries 
- * e buscar os dados no Apolo, e em seguida vai salvar as informacoes obtidas
- * dentro da base interna do Moodle.
- * 
- * Depois de tudo isso, seria bom ele voltar pra tela da view com uma mensagem
- * qualquer de 'sucesso' (se der certo).
- * 
- * Seria bom a gente estabelecer um fator para limitar a busca e tal. Buscar as
- * turmas de um ano so pode dar problemas se for generalizado, entao eh bom 
- * fazermos algo bem pensado.
- */
+define('CLI_SCRIPT', true);
 
-require_once(dirname(__FILE__) . '/../../../config.php');
-require_once('Service/Query.php');
+require(__DIR__.'/../../../config.php');
+
+require_once(__DIR__ . '/../src/Service/Query.php');
 use block_extensao\Service\Query;
  
 class Sincronizar {
 
-  private $URL_RETORNO;
-
   public function __construct() {
-    $this->URL_RETORNO = '/blocks/extensao/pages/sincronizar.php';   
-    $this->sincronizar();
+    // ...
   }
 
   // Captura as turmas atuais no Apolo e registra na base Moodle
-  public function sincronizar () {
+  public function sincronizar ($substituir=false) {
     
     /**
      * Capturar turmas
@@ -38,7 +22,12 @@ class Sincronizar {
      * A ideia eh que essa funcao retorne um array das turmas, trazendo as
      * informacoes relativas aos cursos.
      */
+    
+    // se quiser substituir, precisa apagar os dados de agora
+    if ($substituir) $this->apagar();
+
     $turmas = Query::turmasAbertas();
+
     // monta o array que sera adicionado na mdl_extensao_turma
     $infos_turma = $this->filtrarInfosTurmas($turmas);
 
@@ -47,11 +36,9 @@ class Sincronizar {
     
     // se estiver vazio nao tem por que continuar
     if (empty($infos_turma)) {
-      \core\notification::success('A base já estava sincronizada!');
-      $url = new moodle_url($this->URL_RETORNO);
-      redirect($url);
-      // return false;
-    }
+      echo "A base já estava sincronizada!" . PHP_EOL;
+      return;
+    } 
 
     // salva na mdl_extensao_turma
     $this->salvarTurmasExtensao($infos_turma);
@@ -74,40 +61,38 @@ class Sincronizar {
      * )
      * ai vamos poder relacionar as duas usando 'id_turma'.
      */
-    
+    // captura os docentes
+    $docentes = Query::docentesTurmasAbertas();
+
     // monta o array que sera adicionado na mdl_extensao_usuario_curso
-    $infos_docentes_turmas = $this->filtrarInfosDocentesTurmas($turmas);
+    $docentes = $this->objetoDocentes($docentes);
     
     // salva na mdl_extensao_usuario_curso
-    $this->salvarDocentesTurmas($infos_docentes_turmas);
+    $this->salvarDocentesTurmas($docentes);
 
     // retorna a pagina de sincronizar
-    \core\notification::success('Atualizado com sucesso!');
-    $url = new moodle_url($this->URL_RETORNO);
-    redirect($url);
+    echo "Atualizado com sucesso!" . PHP_EOL;
   }
 
   // Filtra as infos das turmas, condensando somente algumas em outro array
   private function filtrarInfosTurmas ($turmas) {
     return array_map(function($turma) {
       $obj = new stdClass;
-      $obj->id_turma_apolo = $turma['EdCurso']; // DUVIDA: eh essa info que queremos mesmo?
-      $obj->id_curso_apolo = $turma['codCursoExtensao'];
-      $obj->nome_curso_apolo = $turma['NomeCurso'];
-      $obj->curso_moodle_criado = 0;
+      $obj->codofeatvceu = $turma['codofeatvceu'];
+      $obj->nome_curso_apolo = $turma['nomcurceu'];
       return $obj;
     }, $turmas);
   }
 
-  // Fila as infos dos docentes e turmas, condensando somente algumas em outro array
-  private function filtrarInfosDocentesTurmas ($turmas) {
-    return array_map(function($turma) {
+  // Cria objetos para os arrays
+  private function objetoDocentes ($docentes) {
+    return array_map(function($docente) {
       $obj = new stdClass;
-      $obj->id_turma_apolo = $turma['EdCurso']; // DUVIDA: eh essa info que queremos mesmo?
-      $obj->nusp_usuario = $turma['NUSP'];
-      $obj->papel_usuario = $turma['CodAtuacao'];
+      $obj->codofeatvceu = $docente['codofeatvceu'];
+      $obj->codpes = $docente['codpes'];
+      $obj->papel_usuario = $docente['codatc'];
       return $obj;
-    }, $turmas);
+    }, $docentes);
   }
 
   /**
@@ -126,7 +111,7 @@ class Sincronizar {
     // percorre as turmas e vai procurando na base
     foreach($turmas as $turma) {
       // procura pela turma na base
-      $resultado_busca = $DB->record_exists('extensao_turma', array('id_turma_apolo' => $turma->id_turma_apolo));
+      $resultado_busca = $DB->record_exists('extensao_turma', array('codofeatvceu' => $turma->codofeatvceu));
 
       // se existir, vamos apenas remover do $turmas...
       if (!$resultado_busca)
@@ -143,11 +128,29 @@ class Sincronizar {
   }    
   
   // Salvar as relacoes docente-turma
-  private function salvarDocentesTurmas ($docentes_turmas) {
+  private function salvarDocentesTurmas ($docentes) {
     global $DB;
-    $DB->insert_records('extensao_usuario_turma', $docentes_turmas);
+    $DB->insert_records('extensao_ministrante', $docentes);
   }
 
+  // Apagar informacoes salvas atualmente
+  private function apagar () {
+    global $DB;
+
+    $DB->delete_records('extensao_turma');
+    $DB->delete_records('extensao_ministrante');
+  }
 }
 
+$opcoes =getopt("", ["substituir"]);
 $sinc = new Sincronizar();
+
+// caso passe a opcao de susbstituir os dados da base atual
+if (isset($opcoes["substituir"])) {
+  // apaga os dados atuais
+  $sinc->sincronizar(true);
+} else {
+  $sinc->sincronizar();
+}
+
+echo 'Sincronização encerrada.' . PHP_EOL;

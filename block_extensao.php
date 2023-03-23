@@ -22,17 +22,16 @@ class block_extensao extends block_base {
         // para cada curso, cria um formulario
         for ($i = 0; $i < count($cursos_usuario); $i++) {
             // captura o id da turma no plugin de extensao
-            $id_extensao = $cursos_usuario[$i]['id_turma_extensao'];
+            $codofeatvceu = $cursos_usuario[$i]['codofeatvceu'];
 
             // cria um formulario
-            $form = new redirecionamento_criacao_ambiente('/blocks/extensao/pages/criar_ambiente.php', array('id_turma_extensao' => $id_extensao));
+            $form = new redirecionamento_criacao_ambiente('/blocks/extensao/pages/criar_ambiente.php', array('codofeatvceu' => $codofeatvceu));
 
             $cursos_usuario[$i]['formulario'] = $form->render();
         }
 
         // array da template
         $info = array(
-            'urlPaginaSincronizar' => new moodle_url('/blocks/extensao/pages/sincronizar.php'),
             'sem_cursos' => empty($cursos_usuario),
             'cursos_docente' => $cursos_usuario
         );

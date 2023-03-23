@@ -6,42 +6,28 @@
   <TABLES>
     <TABLE NAME="block_extensao" COMMENT="Default comment for block_extensao, please edit me">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="16" NOTNULL="true" SEQUENCE="true"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="extensao_turma" COMMENT="Para armazenar informaco
-    es de turma e curso.">
+    <TABLE NAME="extensao_turma" COMMENT="Para armazenar informacoes de turma e curso.">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="id_turma_apolo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id da turma no Apolo."/>
-        <FIELD NAME="id_curso_apolo" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id do curso no Apolo."/>
+        <FIELD NAME="codofeatvceu" TYPE="int" LENGTH="16" NOTNULL="true" SEQUENCE="false" COMMENT="Codigo de oferecimento da atividade no Apolo."/>
         <FIELD NAME="nome_curso_apolo" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do curso no Apolo."/>
-        <FIELD NAME="curso_moodle_criado" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="1 se o curso ja tiver sido criado, 0 se nao"/>
+        <FIELD NAME="id_moodle" TYPE="int" LENGTH="16" NOTNULL="false" SEQUENCE="false" COMMENT="Identificador do curso no Moodle"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="primary" TYPE="primary" FIELDS="codofeatvceu"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="extensao_usuario" COMMENT="Para armazenar a conexão entre um usuario no Apolo e o mesmo usuário no Moodle.">
+    <TABLE NAME="extensao_ministrante" COMMENT="Para relacionar os ministrantes com os cursos.">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="id_moodle" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Id do usuario no Moodle."/>
-        <FIELD NAME="id_apolo" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Id do usuario no Apolo."/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk_id_moodle" TYPE="foreign" FIELDS="id_moodle" REFTABLE="mdl_user" REFFIELDS="id" COMMENT="Chave estrangeira para o id_moodle"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="extensao_usuario_turma" COMMENT="Para relacionar os usuarios com os cursos.">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="nusp_usuario" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Numero USP do usuario."/>
-        <FIELD NAME="id_turma_apolo" TYPE="INT" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Id da turma no Apolo."/>
-        <FIELD NAME="papel_usuario" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Papel do usuario (i.e., se eh aluno, docente, monitor, etc)."/>
+        <FIELD NAME="id" TYPE="int" LENGTH="16" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="codpes" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Numero USP do usuario."/>
+        <FIELD NAME="codofeatvceu" TYPE="INT" LENGTH="16" NOTNULL="true" SEQUENCE="false" COMMENT="Codigo de oferecimento da atividade no Apolo."/>
+        <FIELD NAME="papel_usuario" TYPE="int" LENGTH="16" NOTNULL="true" SEQUENCE="false" COMMENT="Papel do usuario (i.e., se eh docente, monitor, etc)."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

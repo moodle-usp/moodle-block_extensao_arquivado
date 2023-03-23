@@ -25,18 +25,16 @@ class Turmas {
     global $DB;
     
     // captura as turmas relacionadas ao usuario
-    $query = "SELECT id_turma_apolo FROM {extensao_usuario_turma} WHERE nusp_usuario = $nusp_docente AND papel_usuario IN (1,2,5)";
-    $usuario_turma = $DB->get_records_sql($query, ['nusp_usuario' => $nusp_docente]);
+    $query = "SELECT codofeatvceu FROM {extensao_ministrante} WHERE codpes = $nusp_docente AND papel_usuario IN (1,2,5)";
+    $usuario_turma = $DB->get_records_sql($query, ['codpes' => $nusp_docente]);
 
     $cursos_usuario = array();
     // captura os nomes dos cursos relacionados
     foreach ($usuario_turma as $turma) {
-      $busca = $DB->get_record('extensao_turma', ['id_turma_apolo' => $turma->id_turma_apolo]);
+      $busca = $DB->get_record('extensao_turma', ['codofeatvceu' => $turma->codofeatvceu]);
 
       $cursos_usuario[] = array(
-        'id_turma_extensao' => $busca->id,
-        'id_turma_apolo' => $turma->id_turma_apolo,
-        'id_curso_apolo' => $busca->id_curso_apolo,
+        'codofeatvceu' => $turma->codofeatvceu,
         'nome_curso_apolo' => $busca->nome_curso_apolo
       );
     }
@@ -45,19 +43,19 @@ class Turmas {
   }
 
   // Captura as informacoes de uma turma passado o id no plugin Extensao
-  public static function info_turma_id_extensao ($id_extensao) {
+  public static function info_turma_id_extensao ($codofeatvceu) {
     global $DB;
-    $infos = $DB->get_record('extensao_turma', ['id' => $id_extensao]);
+    $infos = $DB->get_record('extensao_turma', ['codofeatvceu' => $codofeatvceu]);
     return $infos;
   }
 
   // Verifica se uma turma esta associada a um usuario
-  public static function usuario_docente_turma ($nusp_usuario, $id_extensao) {
+  public static function usuario_docente_turma ($nusp_usuario, $codofeatvceu) {
     global $DB;
     // captura o id apolo da turma na base do extensao
-    $info_turma = $DB->get_record('extensao_turma', ['id' => $id_extensao]);
+    $info_turma = $DB->get_record('extensao_turma', ['codofeatvceu' => $codofeatvceu]);
     // agora ve se esta associada ao usuario
-    $query = "SELECT * FROM {extensao_usuario_turma} WHERE id_turma_apolo = $info_turma->id_turma_apolo AND nusp_usuario = $nusp_usuario";
+    $query = "SELECT * FROM {extensao_ministrante} WHERE codofeatvceu = $info_turma->codofeatvceu AND codpes = $nusp_usuario";
     $turma_associada = $DB->get_record_sql($query);
     return !empty($turma_associada);
   }

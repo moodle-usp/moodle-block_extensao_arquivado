@@ -8,8 +8,10 @@
 require_once(dirname(__FILE__) . '/../../../config.php');
 global $USER, $PAGE, $OUTPUT;
 
-$PAGE->set_heading(get_string('pluginname', 'block_extensao'));
 $PAGE->set_pagelayout('admin');
+$PAGE->set_url("/block/extensao/criar_ambiente");
+$PAGE->set_context(context_system::instance());
+$PAGE->set_heading(get_string('pluginname', 'block_extensao'));
 require_login();
 
 // requerimentos
@@ -19,10 +21,10 @@ require_once('../src/turmas.php');
 // forms
 $forms = new redirecionamento_criacao_ambiente();
 $info_forms = $forms->get_data();
-$id_turma_extensao = $info_forms->id_turma_extensao;
+$codofeatvceu = $info_forms->codofeatvceu;
 
 // verifica se a turma enviada eh do usuario logado
-if (! Turmas::usuario_docente_turma($USER->idnumber, $id_turma_extensao) ) {
+if (! Turmas::usuario_docente_turma($USER->idnumber, $codofeatvceu) ) {
   \core\notification::error('A turma solicitada não está na sua lista de turmas!');
   $url = new moodle_url($CFG->wwwroot);
   redirect($url);
@@ -40,7 +42,7 @@ if (! Turmas::usuario_docente_turma($USER->idnumber, $id_turma_extensao) ) {
  * eh importante tambem criar o formulario como um $mform, e 
  * nao na mao.
  */
-$informacoes_turma = Turmas::info_turma_id_extensao($id_turma_extensao);
+$informacoes_turma = Turmas::info_turma_id_extensao($codofeatvceu);
 
 // cabecalho
 print $OUTPUT->header();

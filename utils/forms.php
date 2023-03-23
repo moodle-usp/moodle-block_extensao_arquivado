@@ -14,7 +14,11 @@ require_once($CFG->libdir . '/formslib.php');
 class redirecionamento_criacao_ambiente extends moodleform {
   public function definition () {
     // input hidden com o id da turma no plugin Extensao
-    $this->_form->addElement('hidden', 'id_turma_extensao', $this->_customdata['id_turma_extensao']);
+    $codofeatvceu = "";
+    if (isset($this->_customdata['codofeatvceu']))
+      $codofeatvceu = $this->_customdata['codofeatvceu'];  
+    $this->_form->addElement('hidden', 'codofeatvceu', $codofeatvceu);
+    $this->_form->setType('codofeatvceu', PARAM_TEXT);
 
     // botao de submit
     $this->_form->addElement('submit', 'redirecionar_criar_ambiente', 'Criar ambiente');

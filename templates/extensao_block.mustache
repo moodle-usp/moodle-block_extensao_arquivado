@@ -1,10 +1,4 @@
-<p>Sincronizar os cursos com o Apolo</p>
-
-<a class="btn btn-primary" href="{{ urlPaginaSincronizar }}">Sincronizar</a>
-
-<hr>
-
-<h4>Seus cursos</h4>
+<h5>Seus cursos</h5>
 
 {{#sem_cursos}}
   <p>Nenhum curso foi encontrado.</p>
@@ -13,7 +7,7 @@
 {{#cursos_docente}}
 <div class="card">
   <div class="card-body">
-    <h6 class="card-title">({{ id_curso_apolo }}-{{ id_turma_apolo }}) {{ nome_curso_apolo }}</h6>
+    <h6 class="card-title">({{ codofeatvceu }}) {{ nome_curso_apolo }}</h6>
     
     {{{ formulario }}}
   </div>  

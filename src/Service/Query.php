@@ -17,38 +17,44 @@ class Query
      * Captura as turmas abertas.
      * Sao consideradas como turmas abertas somente as turmas com
      * data de encerramento posterior a data de hoje.
-     *
-     * Nesse momento tambem, o que nos interessa eh quem tem o
-     * tipo de atuacao como 1, 2 ou 5 somente (eh isso mesmo?)
      */
     $hoje = date("Y-m-d");
     $query = "
-      SELECT 
-            M.codofeatvceu AS 'Codoferecimentoatv'
-            ,P.codpes AS 'NUSP'
-            ,M.codatc AS 'CodAtuacao'
-            ,O.codcurceu AS 'CodCurso'
-            ,O.codatvceu AS 'CodAtividade'
-            ,O.dtainiofeatv AS 'Inicio'
-            ,O.dtafimofeatv AS 'Fim'
-            ,C.nomcurceu AS 'NomeCurso'
-            ,ED.codcurceu AS 'codCursoExtensao'
-            ,ED.codedicurceu  AS 'EdCurso'
-            FROM 
-            MINISTRANTECEU M
-        LEFT JOIN PESSOA P
-            ON M.codpes = P.codpes
-        RIGHT JOIN OFERECIMENTOATIVIDADECEU O 
-           ON M.codofeatvceu = O.codofeatvceu
-        RIGHT JOIN CURSOCEU C
-          ON C.codcurceu = O.codcurceu
-        RIGHT JOIN EDICAOCURSOOFECEU ED
-            ON ED.codcurceu = C.codcurceu
-        WHERE 
-          O.dtafimofeatv > '$hoje'
-          AND
-          M.codatc = 1
+      SELECT
+        o.codofeatvceu
+        ,c.nomcurceu
+        ,o.dtainiofeatv
+        ,o.dtafimofeatv
+      FROM OFERECIMENTOATIVIDADECEU o
+          LEFT JOIN CURSOCEU c
+            ON c.codcurceu = o.codcurceu
+          LEFT JOIN EDICAOCURSOOFECEU e
+            ON o.codcurceu = e.codcurceu AND o.codedicurceu = e.codedicurceu
+      WHERE e.dtainiofeedi >= '$hoje'
+      ORDER BY codofeatvceu 
     ";
+
+    return USPDatabase::fetchAll($query);
+  }
+
+  public static function docentesTurmasAbertas () {
+    /**
+     * Captura os docentes das turmas abertas.
+     * Sao consideradas como turmas abertas somente as turmas com
+     * data de encerramento posterior a data de hoje.
+     */
+    $hoje = date("Y-m-d");
+    $query = "
+      SELECT
+        m.codofeatvceu
+        ,m.codpes
+        ,m.codatc
+      FROM dbo.MINISTRANTECEU m
+      WHERE codpes IS NOT NULL
+        AND m.dtainimisatv >= '$hoje'
+      ORDER BY codofeatvceu
+    ";
+
     return USPDatabase::fetchAll($query);
   }
   
