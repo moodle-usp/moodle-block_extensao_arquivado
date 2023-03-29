@@ -74,4 +74,11 @@ class Query
     return $info_curso;
   }
   
+   // Obtem o objetivo do curso explicitado 
+  public static function objetivo_extensao($codofeatvceu) {
+    $obj = "
+    SELECT c.objcur FROM OFERECIMENTOATIVIDADECEU o LEFT JOIN CURSOCEU c ON c.codcurceu = o.codcurceu 
+    WHERE codofeatvceu = $codofeatvceu";
+    return USPDatabase::fetch($obj);
+  }
 }

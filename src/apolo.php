@@ -22,4 +22,11 @@ class Apolo {
     return Query::informacoesTurma($codofeatvceu);
   }
 
+  public static function objetivo_extensao ($codofeatvceu) {
+    /**
+     * Obtem o objetivo do curso tendo em vista que o banco de
+     * dados nao possui a descricao do curso.
+     */
+    return Query::objetivo_extensao($codofeatvceu)['objcur'];
+  }
 }

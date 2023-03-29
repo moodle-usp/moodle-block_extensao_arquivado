@@ -137,12 +137,12 @@ class Sincronizar {
   private function apagar () {
     global $DB;
 
-    $DB->delete_records('extensao_turma');
+    $DB->delete_records('extensao_turma', array('id_moodle' => NULL));
     $DB->delete_records('extensao_ministrante');
   }
 }
 
-$opcoes =getopt("", ["substituir"]);
+$opcoes = getopt("", ["substituir"]);
 $sinc = new Sincronizar();
 
 // caso passe a opcao de susbstituir os dados da base atual

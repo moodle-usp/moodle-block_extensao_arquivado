@@ -15,8 +15,9 @@ $PAGE->set_heading(get_string('pluginname', 'block_extensao'));
 require_login();
 
 // requerimentos
-require_once('../utils/forms.php');
-require_once('../src/turmas.php');
+require_once(__DIR__ . '/../utils/forms.php');
+require_once(__DIR__ . '/../src/turmas.php');
+require_once(__DIR__ . '/../src/apolo.php');
 
 // capturando o codfeatvceu
 $forms = new redirecionamento_criacao_ambiente();
@@ -39,6 +40,7 @@ if (! Turmas::usuario_docente_turma($USER->idnumber, $codofeatvceu) ) {
 
 // aqui precisamos capturar as informacoes basicas do curso
 $informacoes_turma = Turmas::info_turma_id_extensao($codofeatvceu);
+$informacoes_turma->objetivo = Apolo::objetivo_extensao($codofeatvceu);
 
 // cria o formulario
 // TODO: capturar informacoes reais
@@ -46,7 +48,7 @@ $formulario = new criar_ambiente_moodle('/blocks/extensao/pages/criando_ambiente
   'codofeatvceu' => $codofeatvceu,
   'shortname' => 'map2310',
   'fullname' => $informacoes_turma->nome_curso_apolo,
-  'summary' => 'Este é o sumário do curso.'
+  'summary' => $informacoes_turma->objetivo
 ));
 
 
