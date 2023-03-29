@@ -10,16 +10,17 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot.'/course/lib.php'); // biblioteca de cursos
+require_once(__DIR__ . '/turmas.php');
 
 class Ambiente {
 
   /**
    * Para criar um curso usando a api do Moodle, passado um objeto de 
-   * curso
+   * curso.
    */
-  public static function criar_ambiente ($curso) {
+  public static function criar_ambiente ($codofeatvceu, $curso) {
     // verifica se o curso ja esta na base
-    if (Ambiente::buscar_curso_moodle($curso->shortname)) {
+    if (Turmas::ambiente_criado_turma($codofeatvceu)) {
       return false;
     }
 
@@ -29,37 +30,27 @@ class Ambiente {
   }
 
   /**
-   * Buscar um curso na base Moodle
-   */
-  public static function buscar_curso_moodle ($nome_curto) {
-    global $DB;
-
-    $curso = $DB->get_record('course', ['shortname' => $nome_curto]);
-    return $curso;
-  }
-
-  /**
    * Cria um objeto de curso
    */
-  public static function criar_objeto_curso ($info_forms) {
+  public static function criar_objeto_curso ($info_forms, $info_curso_apolo) {
     $curso = new stdClass;
     
-    $curso->shortname = 'mac032a1b';
+    $curso->shortname = $info_forms->shortname;
     $curso->fullname = $info_forms->fullname;
-    $curso->idnumber = '';
+    $curso->idnumber = ''; //?
     $curso->visible = 1;
     
-    $curso->format = '';
-    $curso->numsections = '';
+    $curso->format = 'topics'; //?
+    $curso->numsections = ''; //?
 
-    $curso->summary = '';
+    $curso->summary = $info_forms->summary; 
     $curso->summaryfomart = FORMAT_HTML;
 
-    $curso->startdate = '';
-    $curso->enddate = '';
+    $curso->startdate = $info_curso_apolo->startdate;
+    $curso->enddate = $info_curso_apolo->enddate;
     $curso->timemodified = time();
 
-    $curso->category = 1;
+    $curso->category = 1; //?
 
     return $curso;
   }

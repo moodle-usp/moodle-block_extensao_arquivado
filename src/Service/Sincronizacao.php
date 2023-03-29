@@ -19,6 +19,4 @@ function capturar_dados () {
     return $cursos;
 }
 
-echo 'teste';
-echo '<pre>';
 capturar_dados();

@@ -16,7 +16,8 @@ class block_extensao extends block_base {
         // caso nao esteja logado
         if (!isset($USER->idnumber)) return;
 
-        // precisamos capturar na base Moodle os cursos nos quais o usuario eh docente
+        // precisamos capturar na base Moodle os cursos nos quais o usuario eh docente e
+        // cujo ambiente ainda nao foi criado
         $cursos_usuario = Turmas::docente_turmas($USER->idnumber);
 
         // para cada curso, cria um formulario

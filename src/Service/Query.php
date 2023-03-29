@@ -2,6 +2,8 @@
 
 namespace block_extensao\Service;
 
+use stdClass;
+
 require_once('USPDatabase.php');
 
 class Query 
@@ -56,6 +58,20 @@ class Query
     ";
 
     return USPDatabase::fetchAll($query);
+  }
+
+  public static function informacoesTurma ($codofeatvceu) {
+    /**
+     * A partir do codofeatvceu, captura as informacoes de uma
+     * turma, como a data de inicio e tal.
+     * 
+     * [ a query sera posta aqui posteriormente ]
+     */
+    $info_curso = new stdClass;
+    $info_curso->codofeatvceu = $codofeatvceu;
+    $info_curso->startdate = strtotime("now");
+    $info_curso->enddate = strtotime("+1 year");
+    return $info_curso;
   }
   
 }

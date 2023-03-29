@@ -14,14 +14,6 @@ class Turmas {
   
   // Captura as turmas relativas a um docente na base do Moodle
   public static function docente_turmas ($nusp_docente) {
-
-    /**
-     * Docente Turmas
-     * 
-     * A ideia eh que essa funcao retorne um array dasd turmas, trazendo
-     * as informacoes relativas aos cursos.
-     */
-
     global $DB;
     
     // captura as turmas relacionadas ao usuario
@@ -32,6 +24,8 @@ class Turmas {
     // captura os nomes dos cursos relacionados
     foreach ($usuario_turma as $turma) {
       $busca = $DB->get_record('extensao_turma', ['codofeatvceu' => $turma->codofeatvceu]);
+
+      if ($busca->id_moodle) continue;
 
       $cursos_usuario[] = array(
         'codofeatvceu' => $turma->codofeatvceu,
@@ -60,4 +54,24 @@ class Turmas {
     return !empty($turma_associada);
   }
 
+  /**
+   * Verifica se uma turma no extensao_turma ja teve um ambiente criado
+   */
+  public static function ambiente_criado_turma ($codofeatvceu) {
+    global $DB;
+    $query = $DB->get_record('extensao_turma', ['codofeatvceu' => $codofeatvceu]);
+    return $query->id_moodle;
+  }
+
+  // Atualiza o codigo da turma no Moodle
+  /**
+   * OBS: parece que do jeito que a gente fez, sem o id, nao funciona a 
+   * api do moodle! 
+   */
+  public static function atualizar_id_moodle_turma ($codofeatvceu, $id_moodle) {
+    global $DB;
+    $query = "UPDATE {extensao_turma} SET id_moodle = $id_moodle WHERE codofeatvceu = $codofeatvceu";
+    $query = $DB->execute($query);
+    return $query;
+  }
 }

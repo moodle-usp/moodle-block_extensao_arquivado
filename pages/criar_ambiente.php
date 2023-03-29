@@ -41,9 +41,12 @@ if (! Turmas::usuario_docente_turma($USER->idnumber, $codofeatvceu) ) {
 $informacoes_turma = Turmas::info_turma_id_extensao($codofeatvceu);
 
 // cria o formulario
+// TODO: capturar informacoes reais
 $formulario = new criar_ambiente_moodle('/blocks/extensao/pages/criando_ambiente.php', array(
   'codofeatvceu' => $codofeatvceu,
-  'fullname' => $informacoes_turma->nome_curso_apolo
+  'shortname' => 'map2310',
+  'fullname' => $informacoes_turma->nome_curso_apolo,
+  'summary' => 'Este é o sumário do curso.'
 ));
 
 
