@@ -5,7 +5,7 @@
  * informacoes basicas do ambiente que esta criando.
  */
 
-require_once(dirname(__FILE__) . '/../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 global $USER, $PAGE, $OUTPUT;
 
 $PAGE->set_pagelayout('admin');
@@ -15,13 +15,21 @@ $PAGE->set_heading(get_string('pluginname', 'block_extensao'));
 require_login();
 
 // requerimentos
-require_once('../utils/forms.php');
-require_once('../src/turmas.php');
+require_once(__DIR__ . '/../utils/forms.php');
+require_once(__DIR__ . '/../src/turmas.php');
+require_once(__DIR__ . '/../src/apolo.php');
 
-// forms
+// capturando o codfeatvceu
 $forms = new redirecionamento_criacao_ambiente();
 $info_forms = $forms->get_data();
-$codofeatvceu = $info_forms->codofeatvceu;
+if (!empty($info_forms))
+  $codofeatvceu = $info_forms->codofeatvceu;
+
+// se estiver vazio, tenta pegar via sessao
+else {
+  $codofeatvceu = $_SESSION['codofeatvceu'];
+  unset($_SESSION['codofeatvceu']);
+}
 
 // verifica se a turma enviada eh do usuario logado
 if (! Turmas::usuario_docente_turma($USER->idnumber, $codofeatvceu) ) {
@@ -30,25 +38,29 @@ if (! Turmas::usuario_docente_turma($USER->idnumber, $codofeatvceu) ) {
   redirect($url);
 }
 
-/**
- * aqui precisamos capturar as informacoes basicas do curso
- * 
- * podemos seguir a ideia do e-disciplinas e carregar o titulo,
- * nome curto e descricao num primeiro momento.
- * 
- * ainda nao tenho a query, entao vou puxar apenas o nome do 
- * curso, edicao e tal. 
- * 
- * eh importante tambem criar o formulario como um $mform, e 
- * nao na mao.
- */
+// aqui precisamos capturar as informacoes basicas do curso
 $informacoes_turma = Turmas::info_turma_id_extensao($codofeatvceu);
+$informacoes_turma->objetivo = Apolo::objetivo_extensao($codofeatvceu);
+
+// cria o formulario
+// TODO: capturar informacoes reais
+$formulario = new criar_ambiente_moodle('/blocks/extensao/pages/criando_ambiente.php', array(
+  'codofeatvceu' => $codofeatvceu,
+  'shortname' => 'map2310',
+  'fullname' => $informacoes_turma->nome_curso_apolo,
+  'summary' => $informacoes_turma->objetivo
+));
+
+
+// EXIBINDO
 
 // cabecalho
 print $OUTPUT->header();
 
 // template
-print $OUTPUT->render_from_template('block_extensao/criar_ambiente', $informacoes_turma);
+print $OUTPUT->render_from_template('block_extensao/criar_ambiente', array(
+  'formulario' => $formulario->render()
+));
 
 // rodape
 print $OUTPUT->footer();
