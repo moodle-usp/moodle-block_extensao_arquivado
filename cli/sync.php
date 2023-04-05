@@ -42,6 +42,7 @@ class Sincronizar {
 
     // salva na mdl_extensao_turma
     $this->salvarTurmasExtensao($infos_turma);
+    echo 'Turmas sincronizadas...' . PHP_EOL;
     
     /**
      * Relacionar usuarios com turmas
@@ -64,14 +65,34 @@ class Sincronizar {
     // captura os docentes
     $docentes = Query::docentesTurmasAbertas();
 
-    // monta o array que sera adicionado na mdl_extensao_usuario_curso
+    // monta o array que sera adicionado na mdl_extensao_ministrante
     $docentes = $this->objetoDocentes($docentes);
     
-    // salva na mdl_extensao_usuario_curso
+    // salva na mdl_extensao_ministrante
     $this->salvarDocentesTurmas($docentes);
+    echo 'Docentes sincroniados...' . PHP_EOL;
+
+
+    // agora, captura os alunos matriculados
+    $alunos = [];
+    foreach ($infos_turma as $turma) {
+      $aluno = Query::alunosMatriculados($turma->codofeatvceu);
+      if (!empty($aluno)) $alunos[] = $aluno;
+    }
+    if (empty($alunos)) {
+      echo 'Sem alunos para sincronizar...' . PHP_EOL;
+    } else {
+      // monta o array que sera adicionado na mdl_extensao_aluno
+      $alunos = $this->objetoAlunos($alunos);
+  
+      // salva na mdl_extensao_aluno
+      $this->salvarAlunosTurmas($alunos);
+      echo 'Alunos sincronizados...' . PHP_EOL;
+    }
+
 
     // retorna a pagina de sincronizar
-    echo "Atualizado com sucesso!" . PHP_EOL;
+    echo PHP_EOL . "Atualizado com sucesso!" . PHP_EOL;
   }
 
   // Filtra as infos das turmas, condensando somente algumas em outro array
@@ -93,6 +114,18 @@ class Sincronizar {
       $obj->papel_usuario = $docente['codatc'];
       return $obj;
     }, $docentes);
+  }
+
+  // Cria objetos para os alunos
+  private function objetoAlunos ($alunos) {
+    return array_map(function($aluno) {
+      $obj = new stdClass;
+      $obj->codofeatvceu = $aluno['codofeatvceu'];
+      $obj->codpes = $aluno['codpes'];
+      $obj->email = "";
+      $obj->nome = $aluno['nompes'];
+      return $obj;
+    }, $alunos);
   }
 
   /**
@@ -133,12 +166,19 @@ class Sincronizar {
     $DB->insert_records('extensao_ministrante', $docentes);
   }
 
+  // Salvar as relacoes aluno-turma
+  private function salvarAlunosTurmas ($alunos) {
+    global $DB;
+    $DB->insert_records('extensao_aluno', $alunos);
+  }
+
   // Apagar informacoes salvas atualmente
   private function apagar () {
     global $DB;
 
     $DB->delete_records('extensao_turma', array('id_moodle' => NULL));
     $DB->delete_records('extensao_ministrante');
+    $DB->delete_records('extensao_aluno');
   }
 }
 
