@@ -46,7 +46,7 @@ $informacoes_turma->objetivo = Apolo::objetivo_extensao($codofeatvceu);
 // TODO: capturar informacoes reais
 $formulario = new criar_ambiente_moodle('/blocks/extensao/pages/criando_ambiente.php', array(
   'codofeatvceu' => $codofeatvceu,
-  'shortname' => 'map2310',
+  'shortname' => $codofeatvceu,
   'fullname' => $informacoes_turma->nome_curso_apolo,
   'summary' => $informacoes_turma->objetivo
 ));
