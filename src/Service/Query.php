@@ -39,9 +39,9 @@ class Query
     return USPDatabase::fetchAll($query);
   }
 
-  public static function docentesTurmasAbertas () {
+  public static function ministrantesTurmasAbertas () {
     /**
-     * Captura os docentes das turmas abertas.
+     * Captura os ministrantes das turmas abertas.
      * Sao consideradas como turmas abertas somente as turmas com
      * data de encerramento posterior a data de hoje.
      */
