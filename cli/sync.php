@@ -39,7 +39,7 @@ class Sincronizar {
   public function sincronizar ($apagar=false) {
     
     // se quiser substituir, precisa apagar os dados de agora
-    if ($substituir) $this->apagar();
+    if ($apagar) $this->apagar();
 
     // sincronizando as turmas
     $turmas = $this->sincronizarTurmas();
@@ -66,7 +66,7 @@ class Sincronizar {
     $turmas = Query::turmasAbertas();
 
     // monta o array que sera adicionado na mdl_extensao_turma
-    $infos_turmas = $this->filtrarInfosTurmas($turmas);
+    $infos_turma = $this->filtrarInfosTurmas($turmas);
 
     // pega as turmas que nao estao na base
     $infos_turma = $this->turmasNaBase($infos_turma);
@@ -92,7 +92,7 @@ class Sincronizar {
     $ministrantes = Query::ministrantesTurmasAbertas();
 
     // monta o array que sera adicionado na mdl_extensao_ministrante
-    $ministrantes = $tis->objetoMinistrantes($ministrantes);
+    $ministrantes = $this->objetoMinistrantes($ministrantes);
 
     // salva na mdl_extensao_ministrante
     $this->salvarMinistrantesTurmas($ministrantes);
@@ -118,7 +118,8 @@ class Sincronizar {
       $alunos = $this->objetoAlunos($alunos);
 
       // salva na mdl_extensao_aluno
-      $this->salvarAlunosTurmas($alunos);
+      foreach ($alunos as $alunos_turma) 
+        $this->salvarAlunosTurmas($alunos_turma);
       echo 'Alunos sincronizados...' . PHP_EOL;
     }
   }
@@ -150,9 +151,9 @@ class Sincronizar {
   private function objetoMinistrantes ($ministrantes) {
     return array_map(function($ministrante) {
       $obj = new stdClass;
-      $obj->codofeatvceu = $ministrantes['codofeatvceu'];
-      $obj->codpes = $ministrantes['codpes'];
-      $obj->papel_usuario = $ministrantes['codatc'];
+      $obj->codofeatvceu = $ministrante['codofeatvceu'];
+      $obj->codpes = $ministrante['codpes'];
+      $obj->papel_usuario = $ministrante['codatc'];
       return $obj;
     }, $ministrantes);
   }
@@ -166,13 +167,16 @@ class Sincronizar {
    */
   // Cria objetos para os alunos
   private function objetoAlunos ($alunos) {
-    return array_map(function($aluno) {
-      $obj = new stdClass;
-      $obj->codofeatvceu = $aluno['codofeatvceu'];
-      $obj->codpes = $aluno['codpes'];
-      $obj->email = "";
-      $obj->nome = $aluno['nompes'];
-      return $obj;
+    return array_map(function($alunos_turma) {
+      // percorre os alunos de uma turma
+      return array_map(function($aluno) {
+        $obj = new stdClass;
+        $obj->codofeatvceu = $aluno['codofeatvceu'];
+        $obj->codpes = $aluno['codpes'];
+        $obj->email = "";
+        $obj->nome = $aluno['nompes'];
+        return $obj;
+      }, $alunos_turma);
     }, $alunos);
   }
 
