@@ -17,6 +17,11 @@ class Ambiente {
   /**
    * Para criar um curso usando a api do Moodle, passado um objeto de 
    * curso.
+   * 
+   * @param string $codofeatvceu Codigo de oferecimento da atividade.
+   * @param object $curso Objeto de curso criado por $this->criar_objeto_curso.
+   * 
+   * @return bool|object Erro ou curso criado.
    */
   public static function criar_ambiente ($codofeatvceu, $curso) {
     // verifica se o curso ja esta na base
@@ -30,7 +35,12 @@ class Ambiente {
   }
 
   /**
-   * Cria um objeto de curso
+   * Cria um objeto de curso.
+   * 
+   * @param object $info_forms Valores passados atraves do formulario.
+   * @param object $info_curso_apolo Informacoes do curso extraidas do Apolo.
+   * 
+   * @return object Objeto de curso.
    */
   public static function criar_objeto_curso ($info_forms, $info_curso_apolo) {
     $curso = new stdClass;

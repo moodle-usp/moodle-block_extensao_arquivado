@@ -39,9 +39,9 @@ class Query
     return USPDatabase::fetchAll($query);
   }
 
-  public static function docentesTurmasAbertas () {
+  public static function ministrantesTurmasAbertas () {
     /**
-     * Captura os docentes das turmas abertas.
+     * Captura os ministrantes das turmas abertas.
      * Sao consideradas como turmas abertas somente as turmas com
      * data de encerramento posterior a data de hoje.
      */
@@ -80,5 +80,29 @@ class Query
     SELECT c.objcur FROM OFERECIMENTOATIVIDADECEU o LEFT JOIN CURSOCEU c ON c.codcurceu = o.codcurceu 
     WHERE codofeatvceu = $codofeatvceu";
     return USPDatabase::fetch($obj);
+  }
+
+  public static function alunosMatriculados ($codofeatvceu) {
+    /**
+     * Captura os alunos matriculados nas turmas abertas.
+     * Sao consideradas como tumras abertas somente as turmas com
+     * data de encerramento posterior a data de hoje.
+     */
+    $hoje = date("Y-m-d");
+    $query = "
+      SELECT 
+        ma.codofeatvceu,
+        mc.codpes,
+        p.nompes
+      FROM dbo.MATRICULAATIVIDADECEU ma
+      INNER JOIN	
+        dbo.MATRICULACURSOCEU mc
+        ON mc.codmtrcurceu = ma.codmtrcurceu
+      INNER JOIN
+        dbo.PESSOA p 
+        ON mc.codpes = p.codpes
+      WHERE ma.codofeatvceu = $codofeatvceu
+    ";
+    return USPDatabase::fetchAll($query);
   }
 }

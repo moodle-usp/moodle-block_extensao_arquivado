@@ -14,19 +14,27 @@ use block_extensao\Service\Query;
 
 class Apolo {
 
+  /**
+   * A partir do codofeatvceu, captura as informacoes de uma
+   * turma, como a data de inicio e tal.
+   * 
+   * @param string $codofeatvceu Codigo de oferecimento da atividade.
+   * 
+   * @return object Resultado da busca na base.
+   */
   public static function informacoesTurma ($codofeatvceu) {
-    /**
-     * A partir do codofeatvceu, captura as informacoes de uma
-     * turma, como a data de inicio e tal.
-     */
     return Query::informacoesTurma($codofeatvceu);
   }
 
+  /**
+   * Obtem o objetivo do curso tendo em vista que o banco de
+   * dados nao possui a descricao do curso.
+   * 
+   * @param string $codofeatvceu Codigo de oferecimento da atividade.
+   * 
+   * @return object Resultado da busca na base.
+   */
   public static function objetivo_extensao ($codofeatvceu) {
-    /**
-     * Obtem o objetivo do curso tendo em vista que o banco de
-     * dados nao possui a descricao do curso.
-     */
     return Query::objetivo_extensao($codofeatvceu)['objcur'];
   }
 }

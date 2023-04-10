@@ -12,7 +12,13 @@
 
 class Turmas {
   
-  // Captura as turmas relativas a um docente na base do Moodle
+  /**
+   * Captura as turmas as quais um usuario eh ministrante.
+   * 
+   * @param string|integer $nusp_docente Numero USP do usuario.
+   * 
+   * @return array Cursos do usuario.
+   */
   public static function docente_turmas ($nusp_docente) {
     global $DB;
     
@@ -36,14 +42,29 @@ class Turmas {
     return $cursos_usuario;
   }
 
-  // Captura as informacoes de uma turma passado o id no plugin Extensao
+  /**
+   * Captura as informacoes de uma turma na tabela extensao_turma a
+   * partir de seu codigo de oferecimento.
+   * 
+   * @param string $codofeatvceu Codigo de oferecimento da atividade.
+   * 
+   * @return object Resultado da busca na base.
+   */
   public static function info_turma_id_extensao ($codofeatvceu) {
     global $DB;
     $infos = $DB->get_record('extensao_turma', ['codofeatvceu' => $codofeatvceu]);
     return $infos;
   }
 
-  // Verifica se uma turma esta associada a um usuario
+  /**
+   * Verifica se um usuario esta registrado como docente de uma turma.
+   * 
+   * @param integer|string $nusp_usuario Numero USP do usuario.
+   * @param string         $codofeatvceu Codigo de oferecimento da turma.
+   * 
+   * @return bool Verdadeiro se o usuario estiver registrado como ministrante,
+   *              falso caso contrario.
+   */
   public static function usuario_docente_turma ($nusp_usuario, $codofeatvceu) {
     global $DB;
     // captura o id apolo da turma na base do extensao
@@ -56,6 +77,11 @@ class Turmas {
 
   /**
    * Verifica se uma turma no extensao_turma ja teve um ambiente criado
+   * 
+   * @param string $codofeatvceu Codigo de oferecimento da atividade.
+   * 
+   * @return integer|null Id da turma caso ja tenha sido criado, NULL caso
+   *                      contrario.
    */
   public static function ambiente_criado_turma ($codofeatvceu) {
     global $DB;
@@ -63,10 +89,17 @@ class Turmas {
     return $query->id_moodle;
   }
 
-  // Atualiza o codigo da turma no Moodle
   /**
-   * OBS: parece que do jeito que a gente fez, sem o id, nao funciona a 
-   * api do moodle! 
+   * Atualiza o codigo da turma no Moodle na tabvela extensao_turma,
+   * chamado quando a area da turma eh criada no Moodle.
+   * 
+   * OBS: Parece que do jeito que foi feito, sem um id primary_key,
+   * nao funciona a API do Moodle.
+   * 
+   * @param string  $codofeatvceu Codigo de oferecimento da atividade.
+   * @param integer $id_moodle    Id do curso associado.
+   * 
+   * @return object Resultado da Query.
    */
   public static function atualizar_id_moodle_turma ($codofeatvceu, $id_moodle) {
     global $DB;

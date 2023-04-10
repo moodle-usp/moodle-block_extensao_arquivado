@@ -28,4 +28,4 @@ Para sincronizar com o Sistema Apolo, basta rodar
 
 Caso a base já esteja sincronizada e deseje ainda assim capturar os dados, é possível limpar a base e fazer a sincronização. Basta rodar:
 
-    php cli/sync.php --substituir
+    php cli/sync.php --apagar
