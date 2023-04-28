@@ -22,10 +22,14 @@ Referências:
 
 ## Sincronização com o Apolo
 
-Para sincronizar com o Sistema Apolo, basta rodar
+```
+Uso:    
+    php cli/sync.php [--apagar] [--pular_ministrantes] [--pular_alunos]
+    php cli/sync.php [--help|-h]
 
-    php cli/sync.php
-
-Caso a base já esteja sincronizada e deseje ainda assim capturar os dados, é possível limpar a base e fazer a sincronização. Basta rodar:
-
-    php cli/sync.php --apagar
+Opções:
+  -h --help              Exibe essa ajuda.
+  --apagar               Apaga os dados da base do Moodle e sincroniza com o Apolo do zero.
+  --pular_ministrantes   Não sincroniza os ministrantes.
+  --pular_alunos         Não sincroniza os alunos.
+```

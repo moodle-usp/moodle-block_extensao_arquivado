@@ -90,7 +90,7 @@ class Turmas {
   }
 
   /**
-   * Atualiza o codigo da turma no Moodle na tabvela extensao_turma,
+   * Atualiza o codigo da turma no Moodle na tabela extensao_turma,
    * chamado quando a area da turma eh criada no Moodle.
    * 
    * OBS: Parece que do jeito que foi feito, sem um id primary_key,
@@ -106,5 +106,40 @@ class Turmas {
     $query = "UPDATE {extensao_turma} SET id_moodle = $id_moodle WHERE codofeatvceu = $codofeatvceu";
     $query = $DB->execute($query);
     return $query;
+  }
+
+  /**
+   * Captura o codofeatvceu de um curso a partir do id do ambiente
+   * criado no Moodle.
+   * 
+   * @param string|integer $id_moodle Identificador do ambiente no Moodle.
+   * 
+   * @return object|null Resultado da busca.
+   */
+  public static function codofeatvceu($id_moodle) {
+    global $DB;
+    return $DB->get_record('extensao_turma', ['id_moodle' => $id_moodle]);
+  }
+
+  /**
+   * Captura os alunos inscritos em uma turma na tabela extensao_aluno a
+   * partir do codigo de oferecimento da atividade.
+   * 
+   * @param string|integer $codofeatvceu Codigo de oferecimento da atividade
+   * 
+   * @return array
+   */
+  public static function inscritos_turma ($codofeatvceu) {
+    global $DB;
+
+    $inscritos_obj = $DB->get_records('extensao_aluno', ['codofeatvceu' => $codofeatvceu]);
+    $lista_inscritos = [];
+    foreach ($inscritos_obj as $inscrito) {
+      $lista_inscritos[] = array(
+        'nome' => $inscrito->nome,
+        'email' => $inscrito->email
+      );
+    }
+    return $lista_inscritos;
   }
 }

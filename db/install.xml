@@ -38,6 +38,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="16" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="codpes" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Numero USP do usuario."/>
         <FIELD NAME="codofeatvceu" TYPE="INT" LENGTH="16" NOTNULL="true" SEQUENCE="false" COMMENT="Codigo de oferecimento da atividade no Apolo."/>
+        <FIELD NAME="numcpf" TYPE="INT" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Numero de CPF do aluno."/>
         <FIELD NAME="email" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="E-mail do aluno."/>
         <FIELD NAME="nome" TYPE="TEXT" NOTNULL="true" SEQUENCE="false" COMMENT="Nome do aluno."/>
         <FIELD NAME="id_moodle" TYPE="INT" LENGTH="16" NOTNULL="false" SEQUENCE="false" COMMENT="Identificador do curso no Moodle (para saber se ja foi inscrito)."/>
